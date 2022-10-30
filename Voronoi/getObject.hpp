@@ -26,15 +26,10 @@ public:
     // 中心座標
     Vertex mx = Vertex((p1.x + p2.x)/2, (p1.y + p2.y)/2);
 		double vs = sqrt(pow((p1.x - p2.x),2.0) + pow((p1.y - p2.y),2.0)); // 直線長さ
-		Point v; // 単位方向ベクトル
-	  v.x = (p1.x - p2.x) / vs;
-	  v.y = (p1.y - p2.y) / vs;
-		Edge h; // 法線
-		h.a = v.x;
-	  h.b = v.y;
-	  h.c = - mx.x * h.a - mx.y * h.b;
-    h.rx[0] = Vertex(mx.x - v.y, mx.y + v.x);
-    h.rx[1] = Vertex(mx.x + v.y, mx.y - v.x);
+    // 単位方向ベクトル
+		Point v = Point((p1.x - p2.x) / vs, (p1.y - p2.y) / vs);
+    // 法線
+		Edge h(Point(mx.x - v.y, mx.y + v.x), Point(mx.x + v.y, mx.y - v.x));
     h.cell[0] = index1; // エッジにボロノイセルを追加
     h.cell[1] = index2;
 
