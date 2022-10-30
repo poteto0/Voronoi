@@ -8,7 +8,7 @@ template<typename V> Voronoi getObject::getVoronoi(const std::vector<V> cx){
 	std::vector<Triangle> tris; // 三角形
 	std::vector<Cell> cell(10,Point(0,0)); // セル(中心座標、頂点座標、エッジ)
 
-	tris = this->getDelaunay(cx);
+	tris = this->getDelaunay(cx); // ドロネイ三角形を取得
 
 	// 隣り合う三角形の外心を結ぶ //
 	for(int i=0; i<tris.size(); i++){
@@ -60,7 +60,7 @@ template<typename V> Voronoi getObject::getVoronoi(const std::vector<V> cx){
 template<typename V> std::vector<Triangle> getObject::getDelaunay(const std::vector<V> cx){
 	std::vector<Triangle> tris; // 三角形
 	std::vector<Point> pts; // 母点集合
-	int n=6;
+	int n=6; // 三角形を6個作る
 	pts.push_back(cx[0]);
 	float area = 0;
 	float area_sum = 0;
@@ -86,15 +86,15 @@ template<typename V> std::vector<Triangle> getObject::getDelaunay(const std::vec
 		auto i_tri = tris.begin();
 		while(i_tri != tris.end()){
 			if(i_tri->isIncluded(cx[i])){ // Yes
-				std::cout << "i:" << i << "内部" << std::endl;
 				// その点で三角形を分割して3つの三角形を作る //
 				std::vector<Triangle> tri_test;
 				for(int j=0; j<3; j++){
 					Triangle tri_new(i_tri->cx[j], i_tri->cx[(int)(j+1)%3], cx[i]);
 					tri_new.set(i_tri->cell[j], i_tri->cell[(int)(j+1)%3], i);
-					tri_test.push_back(tri_new);
-					area_sum += tri_new.Area();
+					tri_test.emplace_back(tri_new);
+					area_sum += tri_new.Area(); // 総面積に追加
 				}
+				// 削除
 				area_sum -= i_tri->Area();
 				i_tri = tris.erase(i_tri);
 				tris.insert(tris.end(), tri_test.begin(), tri_test.end());
@@ -102,7 +102,6 @@ template<typename V> std::vector<Triangle> getObject::getDelaunay(const std::vec
 				std::vector<Triangle>().swap(tri_test);
 				break;
 			} else if(i_tri->isOnEdge(cx[i])){ // 線上に現れたとき
-				std::cout << "i:" << i << "線上" << std::endl;
 				// その点で三角形を分割して2つの三角形を作る //
 				std::vector<Triangle> tri_test;
 				for(int j=0; j<3; j++){
@@ -181,8 +180,6 @@ template<typename V> std::vector<Triangle> getObject::getDelaunay(const std::vec
 	}
 	int count = 0;
 	while(abs(area-area_sum)>1&&count <2){
-		std::cout << "もう一回" << std::endl;
-		std::cout << "AREA:" << area_sum << "DEFF" << abs(area-area_sum) << std::endl;
 		num = 0; // ptsのイテレータ
 		for(auto& pt: pts){
 			for(auto& tri: tri_test){
