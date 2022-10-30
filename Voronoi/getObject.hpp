@@ -23,9 +23,8 @@ public:
 
   // 垂直二等分線の取得 //
   Edge getPB(const Point p1, const Point p2, const int index1, const int index2){
-    Vertex mx; // 中心座標
-		mx.x = (p1.x + p2.x)/2;
-	  mx.y = (p1.y + p2.y)/2;
+    // 中心座標
+    Vertex mx = Vertex((p1.x + p2.x)/2, (p1.y + p2.y)/2);
 		double vs = sqrt(pow((p1.x - p2.x),2.0) + pow((p1.y - p2.y),2.0)); // 直線長さ
 		Point v; // 単位方向ベクトル
 	  v.x = (p1.x - p2.x) / vs;
