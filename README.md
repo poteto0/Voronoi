@@ -1,4 +1,4 @@
 # ボロノイ図
 
 ## 概要
-<img src="images/voronoi_success.png" width="200px">
+<img src="image/voronoi_success.png" width="200px">
